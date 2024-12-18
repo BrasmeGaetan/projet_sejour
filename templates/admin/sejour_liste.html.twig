@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Séjours{% endblock %}
+
+{% block body %}
+    <h1>Liste des Séjours</h1>
+
+    <a href="{{ path('creersejour') }}" class="btn btn-primary">Créer un séjour</a>
+
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un séjour par nom de patient...">
+    </div>
+    <table id="patientTable" class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date d'arrivée</th>
+                <th>Date de sortie</th>
+                <th>Patient</th>
+                <th>Commentaire </th>
+                <th>Lit</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sejour in sejours %}
+                <tr>
+                    <td>{{ sejour.id }}</td>
+                    <td>{{ sejour.dateArrivee|date('d/m/Y') }}</td>
+                    <td>
+                        {% if sejour.dateSortie is not null %}
+                            {{ sejour.dateSortie|date('d/m/Y') }}
+                        {% else %}
+                            Pas encore sorti
+                        {% endif %}
+                    </td>
+                    <td class="patient-name">{{ sejour.patient.nom }}</td>
+                    <td>{{ sejour.commentaire }}</td>
+                    <td>{{ sejour.lit.id }}</td>
+                    <td>
+                        <a href="{{ path('modifiersejour', {'id': sejour.id}) }}" class="btn btn-warning">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun séjour trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#patientTable tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.patient-name').textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}

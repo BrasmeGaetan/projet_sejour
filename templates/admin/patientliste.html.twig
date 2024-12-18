@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Séjours{% endblock %}
+
+{% block body %}
+    <h1>Liste des Séjours</h1>
+    <a href="{{ path('creerpatient') }}" class="btn btn-success mb-3">Créer un Nouveau Patient</a>
+
+    <div class="mb-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un patient par nom...">
+    </div>
+
+    <table class="table" id="patientTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Adresse</th>
+                <th>Téléphone</th>
+                <th>Action</th>
+                <th> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for patient in patients %}
+                <tr>
+                    <td>{{ patient.id }}</td>
+                    <td class="patient-name">{{ patient.nom }}</td>
+                    <td>{{ patient.prenom }}</td>
+                    <td>{{ patient.adresse }}</td>
+                    <td>{{ patient.tel }}</td>
+                    <td>
+                        <a href="{{ path('modifierpatient', {'id': patient.id}) }}" class="btn btn-warning">Modifier</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('creersejourpatient', {'id': patient.id}) }}" class="btn btn-warning">Créer un séjour</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6">Aucun patient trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#patientTable tbody tr');
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.patient-name').textContent.toLowerCase();
+                if (name.includes(filter)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}

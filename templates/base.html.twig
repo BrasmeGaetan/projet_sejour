@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mon Application{% endblock %}</title>
+    <!-- Ajouter vos liens CSS ici -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Mon Application</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    {% if is_granted('ROLE_INF') %}
+                    <li class="nav-item">
+                        <a href="{{ path('sejour_date') }}" class="btn btn-primary">Séjours à une date donnée.</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('arrivee_patient') }}" class="btn btn-primary">Arrivée Patient</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('liste_sejours_actuels') }}" class="btn btn-primary">Sortie Patient</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('prochain_sejour')}}" class="btn btn-primary">Séjours à venir</a>
+                    </li>
+
+                    {% endif %}
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a href="{{ path('sejour_liste') }}" class="btn btn-primary">Gérer les séjours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('gererpatient') }}" class="btn btn-primary">Gérer les patients</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <span class="navbar-text ms-auto">
+                    {% if app.user %}
+                        connecté en tant que {{ app.user.username }} ({{ app.user.roles|join(', ') }})
+                        <a href="{{ path('app_logout') }}" class="btn btn-primary">Déconnexion</a>
+                    {% else %}
+                        Vous n'êtes pas connecté.
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container mt-4">
+        {% block body %}
+        {% endblock %}
+    </div>
+
+    <!-- Ajouter vos scripts JS ici -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

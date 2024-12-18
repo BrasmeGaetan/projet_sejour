@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des séjours validés{% endblock %}
+
+{% block body %}
+    <h1>Liste des séjours validés</h1>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nom du patient</th>
+                    <th>Date d'entrée</th>
+                    <th>Date de sortie prévue</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sejours in sejours %}
+                    <tr>
+                        <td>{{ sejours.patient.nom }} {{ sejours.patient.prenom }}</td>
+                        <td>{{ sejours.dateArrivee|date('d/m/Y') }}</td>
+                        {% if sejours.dateSortie%}
+                            <td>{{ sejours.dateSortie|date('d/m/Y') }}</td>
+                        {% else %}
+                            <td>Pas de date de sortie de prévue</td>
+                        {% endif %}
+                        <td>
+                            {% if sejours.etat == 1 %}
+                                <span class="badge badge-success">Sortie validée</span>
+                            {% else %}
+                                <span class="badge badge-warning">En cours</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('sortie_patient', {'id': sejours.id}) }}" class="btn btn-danger">Valider la sortie</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock %}
